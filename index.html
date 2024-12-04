@@ -14,7 +14,8 @@
 <script>
     let currentRoom = null;
     let socket = null;
-    const baseUrl = "http://localhost:3000/api/v1/chat";
+    // const baseUrl = "http://localhost:3000/api/v1/chat";
+    const baseUrl = "https://crmstagingbackend.azurewebsites.net/api/v1/chat";
 
     async function connectWebSocket(room,user) {
         const response = await fetch(`${baseUrl}/negotiate?room=${room}&user=${user}`);
@@ -57,7 +58,7 @@
 
         console.log("Sending message:", message);
         const user = 'gayan'
-        await fetch(`${baseUrl}/send-message`, {
+        await fetch(`${baseUrl}/message`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ room: currentRoom, message,user }),
