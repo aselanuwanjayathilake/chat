@@ -57,7 +57,7 @@
         document.getElementById("messageInput").value = "";
 
         console.log("Sending message:", message);
-        const user = 'asela'
+        const user = 'cbldynamicsuat2@cbllk.com'
         await fetch(`${baseUrl}/message`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -66,8 +66,8 @@
     });
 
     async function initialize() {
-        currentRoom = "asela";
-        socket = await connectWebSocket(currentRoom,"asela");
+        currentRoom = "0DA19868-E7A4-EF11-B8E8-000D3A828A7E";
+        socket = await connectWebSocket(currentRoom,"cbldynamicsuat2@cbllk.com");
     }
 
     initialize();
