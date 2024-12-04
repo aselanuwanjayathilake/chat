@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Application</title>
+</head>
+<body>
+<div>
+    <input type="text" id="messageInput" placeholder="Enter your message">
+    <button id="sendButton">Send</button>
+</div>
+<ul id="messages"></ul>
+
+<script>
+    let currentRoom = null;
+    let socket = null;
+    const baseUrl = "http://localhost:3000/api/v1/chat";
+
+    async function connectWebSocket(room,user) {
+        const response = await fetch(`${baseUrl}/negotiate?room=${room}&user=${user}`);
+        const { url } = await response.json();
+        console.log("WebSocket URL:", url);
+        const ws = new WebSocket(url);
+
+        ws.onopen = () => {
+            console.log("WebSocket connection established");
+        };
+
+        ws.onmessage = (event) => {
+            console.log("Raw message received:", event.data);
+            const message = JSON.parse(event.data);
+            console.log("Parsed message received:", message);
+            displayMessage(message);
+        };
+
+        ws.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+
+        ws.onclose = () => {
+            console.log("WebSocket connection closed");
+        };
+
+        return ws;
+    }
+
+    function displayMessage(message) {
+        const messagesUl = document.getElementById("messages");
+        const messageElement = document.createElement("li");
+        messageElement.textContent = `${message.user}: ${message.text}`;
+        messagesUl.appendChild(messageElement);
+    }
+
+    document.getElementById("sendButton").addEventListener("click", async () => {
+        const message = document.getElementById("messageInput").value;
+        document.getElementById("messageInput").value = "";
+
+        console.log("Sending message:", message);
+        const user = 'gayan'
+        await fetch(`${baseUrl}/send-message`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ room: currentRoom, message,user }),
+        });
+    });
+
+    async function initialize() {
+        currentRoom = "asela";
+        socket = await connectWebSocket(currentRoom,"asela");
+    }
+
+    initialize();
+</script>
+</body>
+</html>
